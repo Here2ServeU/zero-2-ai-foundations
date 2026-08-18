@@ -1,0 +1,16 @@
+# docker-compose.yml
+services:
+  fraud-api:
+    build: .
+    image: zero2ai-fraud-api:v1.0
+    container_name: fraud-api
+    ports: ['5000:5000']
+    environment:
+      - FLASK_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      # python is already inside the box; curl is not.
+      test: ["CMD", "python", "-c",
+        "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 30s
+      retries: 3
